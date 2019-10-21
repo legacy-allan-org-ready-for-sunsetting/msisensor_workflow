@@ -9,19 +9,23 @@ inputs:
     type: 'File'
     inputBinding:
       position: 2
-      prefix: '-b'
     doc: Input bam
+arguments:
+  - position: 3
+    valueFrom: $(inputs.input_bam.basename.replace('.bam', '.bam.bai'))
 outputs:
   - id: bam_index
     type: File
     outputBinding:
-      glob: '*.bai'
+      glob: '*.bam'
+    secondaryFiles:
+      - '.bam.bai'
 requirements:
   - class: ResourceRequirement
     ramMin: 32000
     coresMin: 4
   - class: DockerRequirement
-    dockerPull: 'mjblow/samtools-1.9:latest'
+    dockerPull: 'biocontainers/samtools:v1.9-4-deb_cv1'
   - class: InlineJavascriptRequirement
 'dct:contributor':
   'foaf:mbox': 'mailto:bolipatc@mskcc.org'

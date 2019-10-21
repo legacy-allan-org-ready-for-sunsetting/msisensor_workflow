@@ -31,7 +31,7 @@ requirements:
     ramMin: 32000
     coresMin: 4
   - class: DockerRequirement
-    dockerPull: 'mjblow/samtools-1.9:latest'
+    dockerPull: 'biocontainers/samtools:v1.9-4-deb_cv1'
   - class: InlineJavascriptRequirement
 'dct:contributor':
   'foaf:mbox': 'mailto:bolipatc@mskcc.org'
