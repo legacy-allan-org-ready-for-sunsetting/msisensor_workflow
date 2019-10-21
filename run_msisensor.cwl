@@ -6,40 +6,38 @@ label: run_delly
 inputs:
   bam_normal:
     type: File
-    secondaryFiles:
-      - ^.bai
 
   bam_tumor:
     type: File
-    secondaryFiles:
-      - ^.bai
 
   msisensor_list:
     type: File
  
 outputs:
   output:
-    run_msisensor/output
     type: File
+    outputSource: run_msisensor/output
 
 steps:
   tumor_bam_indexed:
     in:
-      bam: bam_tumor
-    out: [ output ]
-    run: ./cp_bai.cwl
+      input_bam: bam_tumor
+    out: [ bam_index ]
+    run: command_line_tools/samtools_1.9/samtools_index.cwl
 
   normal_bam_indexed:
     in:
-      bam: bam_normal
-    out: [ output ]
-    run: ./cp_bai.cwl
+      input_bam: bam_normal
+    out: [ bam_index ]
+    run: command_line_tools/samtools_1.9/samtools_index.cwl
 
   run_msisensor:
-    in: 
+    in:
       d: msisensor_list
-      t: tumor_bam_indexed/output
-      n: normal_bam_indexed/output
+      t: bam_tumor
+      t_i: tumor_bam_indexed/bam_index
+      n: bam_normal
+      n_i: normal_bam_indexed/bam_index
       o:
         valueFrom: ${ return inputs.t.basename.replace(".bam","") + "_" + inputs.t.basename.replace(".bam","") + ".msisensor.tsv"; }
     out: [ output ]
