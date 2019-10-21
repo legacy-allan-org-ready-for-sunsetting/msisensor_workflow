@@ -1,7 +1,7 @@
 class: Workflow
 cwlVersion: v1.0
-id: run_delly
-label: run_delly 
+id: run_msisensor
+label: run_msisensor
 
 inputs:
   bam_normal:
@@ -24,7 +24,7 @@ steps:
     in:
       input_bam: bam_tumor
       o:
-        valueFrom: $(input_bam.basename.replace('.bam', '.msi_prestep1.bam'))
+        valueFrom: $(inputs.input_bam.basename.replace('.bam', '.msi_prestep1.bam'))
     out: [ bam_sorted ]
     run: command_line_tools/samtools_1.9/samtools_sort.cwl
 
@@ -32,29 +32,27 @@ steps:
     in:
       input_bam: bam_normal
       o:
-        valueFrom: $(input_bam.basename.replace('.bam', '.msi_prestep1.bam'))
+        valueFrom: $(inputs.input_bam.basename.replace('.bam', '.msi_prestep1.bam'))
     out: [ bam_sorted ]
     run: command_line_tools/samtools_1.9/samtools_sort.cwl
 
   tumor_bam_indexed:
     in:
-      input_bam: bam_tumor
+      input_bam: tumor_bam_sorted/bam_sorted
     out: [ bam_index ]
     run: command_line_tools/samtools_1.9/samtools_index.cwl
 
   normal_bam_indexed:
     in:
-      input_bam: bam_normal
+      input_bam: normal_bam_sorted/bam_sorted
     out: [ bam_index ]
     run: command_line_tools/samtools_1.9/samtools_index.cwl
 
   run_msisensor:
     in:
       d: msisensor_list
-      t: bam_tumor
-      t_i: tumor_bam_indexed/bam_index
-      n: bam_normal
-      n_i: normal_bam_indexed/bam_index
+      t: tumor_bam_indexed/bam_index
+      n: normal_bam_indexed/bam_index
       o:
         valueFrom: ${ return inputs.t.basename.replace(".bam","") + "_" + inputs.t.basename.replace(".bam","") + ".msisensor.tsv"; }
     out: [ output ]
