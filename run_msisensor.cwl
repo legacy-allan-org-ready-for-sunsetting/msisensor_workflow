@@ -19,6 +19,23 @@ outputs:
     outputSource: run_msisensor/output
 
 steps:
+
+  tumor_bam_sorted:
+    in:
+      input_bam: bam_tumor
+      o:
+        valueFrom: $(input_bam.basename.replace('.bam', '.msi_prestep1.bam'))
+    out: [ bam_sorted ]
+    run: command_line_tools/samtools_1.9/samtools_sort.cwl
+
+  normal_bam_sorted:
+    in:
+      input_bam: bam_normal
+      o:
+        valueFrom: $(input_bam.basename.replace('.bam', '.msi_prestep1.bam'))
+    out: [ bam_sorted ]
+    run: command_line_tools/samtools_1.9/samtools_sort.cwl
+
   tumor_bam_indexed:
     in:
       input_bam: bam_tumor
