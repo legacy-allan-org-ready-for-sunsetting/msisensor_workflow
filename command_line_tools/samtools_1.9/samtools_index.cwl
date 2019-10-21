@@ -9,6 +9,7 @@ inputs:
     type: 'File'
     inputBinding:
       position: 2
+      valueFrom: $(self.basename)
     doc: Input bam
 arguments:
   - position: 3
@@ -19,7 +20,7 @@ outputs:
     outputBinding:
       glob: '*.bam'
     secondaryFiles:
-      - '.bam.bai'
+      - .bai
 requirements:
   - class: ResourceRequirement
     ramMin: 32000
@@ -27,6 +28,9 @@ requirements:
   - class: DockerRequirement
     dockerPull: 'biocontainers/samtools:v1.9-4-deb_cv1'
   - class: InlineJavascriptRequirement
+  - class: InitialWorkDirRequirement
+    listing:
+      - $(inputs.input_bam)
 'dct:contributor':
   'foaf:mbox': 'mailto:bolipatc@mskcc.org'
   'foaf:name': C. Allan Bolipata
