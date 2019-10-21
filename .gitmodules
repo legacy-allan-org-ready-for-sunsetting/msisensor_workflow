@@ -1,0 +1,3 @@
+[submodule "command_line_tools/msisensor_0.5"]
+	path = command_line_tools/msisensor_0.5
+	url = https://github.com/mskcc-cwl/msisensor_0.5
